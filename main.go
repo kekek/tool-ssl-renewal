@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"tool/internal/setting"
-	"tool/pkg/util/path"
-	"tool/version"
+	"wps.ktkt.com/monitor/tool-ssl-renewal/internal/setting"
+	"wps.ktkt.com/monitor/tool-ssl-renewal/pkg/util/path"
+	"wps.ktkt.com/monitor/tool-ssl-renewal/version"
 )
 
 var printVersion = flag.Bool("v", false, "show build version for the program")

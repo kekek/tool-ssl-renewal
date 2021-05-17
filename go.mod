@@ -1,4 +1,4 @@
-module tool
+module wps.ktkt.com/monitor/tool-ssl-renewal
 
 go 1.16
 
