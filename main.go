@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"wps.ktkt.com/monitor/tool-ssl-renewal/internal/acme"
-	"wps.ktkt.com/monitor/tool-ssl-renewal/internal/client"
+	"wps.ktkt.com/monitor/tool-ssl-renewal/internal/client/ucloud"
 	"wps.ktkt.com/monitor/tool-ssl-renewal/internal/setting"
 	"wps.ktkt.com/monitor/tool-ssl-renewal/version"
 )
@@ -47,14 +47,14 @@ func main() {
 
 	log.Printf("get acme content : \n %s \n", acme.GetKeyAndFullChain())
 
-	client := client.GetClient(setting.Conf.UCloudCredential, client.WithProjectId(setting.Conf.ProjectId))
+	client := ucloud.GetClient(setting.Conf.UCloudCredential, ucloud.WithProjectId(setting.Conf.ProjectId))
 
 	sslId, err := client.SendCreateSSL(acme.GetSSLName(), acme.GetKeyAndFullChain())
 	if err != nil {
 		log.Printf("SendCreateSSL failed : %v", err)
 		panic(err)
 	}
-
+	//sslId := "ssl-5jtnrhjy"
 	err = client.SendBindingSSL(sslId, setting.Conf.UlbId, setting.Conf.VServerId)
 	if err != nil {
 		log.Printf("SendBindingSSL ssl failed : %v", err)

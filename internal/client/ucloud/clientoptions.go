@@ -1,4 +1,4 @@
-package client
+package ucloud
 
 type options struct {
 	projectId string
