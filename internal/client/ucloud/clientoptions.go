@@ -22,7 +22,7 @@ func newFuncOption(f func(*options)) *funcOption {
 	}
 }
 
-func WithProjectId(projectId string) ClientOption  {
+func WithProjectId(projectId string) ClientOption {
 	return newFuncOption(func(o *options) {
 		o.projectId = projectId
 	})

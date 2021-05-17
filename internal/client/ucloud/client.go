@@ -30,6 +30,7 @@ func GetClient(conf auth.Credential, opts ...ClientOption) *Client {
 // SendCreateSSL create new ssl
 func (c *Client) SendCreateSSL(name, content string) (sslId string, err error) {
 	req := c.NewCreateSSLRequest()
+	req.ProjectId = ucloud.String(c.copts.projectId)
 	req.SSLContent = ucloud.String(content)
 	req.SSLName = ucloud.String(name)
 	req.Zone = ucloud.String("cn-bj2-05")
@@ -43,9 +44,74 @@ func (c *Client) SendCreateSSL(name, content string) (sslId string, err error) {
 	return newSSL.SSLId, nil
 }
 
-// SendBindingSSL bind ssl
+// SendBindingSSL 先删除，在绑定
 func (c *Client) SendBindingSSL(sslId, ulbId, vServerId string) error {
+
+	// 查询旧sslID
+	oldSslId, err := c.DoGetOldSSL(ulbId, vServerId)
+	if err != nil {
+		return err
+	}
+
+	if len(sslId) > 0 {
+		// 删除
+		err = c.DoDelOldSSL(oldSslId, ulbId, vServerId)
+		if err != nil {
+			return err
+		}
+	}
+
+	// 绑定新的
+	err = c.DoBindingSSL(sslId, ulbId, vServerId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// DoGetOldSSL get old ssl id
+func (c *Client) DoGetOldSSL(ulbId, vServerId string) (sslId string, err error) {
+
+	sslId = ""
+
+	req := c.NewDescribeVServerRequest()
+	req.ProjectId = ucloud.String(c.copts.projectId)
+	req.ULBId = ucloud.String(ulbId)
+	req.VServerId = ucloud.String(vServerId)
+
+	info, err := c.DescribeVServer(req)
+	if err != nil {
+		return sslId, err
+	}
+
+	if info != nil && len(info.DataSet) > 0 && len(info.DataSet[0].SSLSet) > 0 {
+		sslId = info.DataSet[0].SSLSet[0].SSLId
+	}
+
+	return sslId, nil
+}
+
+// DoDelOldSSL delete old ssl id
+func (c *Client) DoDelOldSSL(sslId, ulbId, vServerId string) error {
+	req := c.NewUnbindSSLRequest()
+	req.ProjectId = ucloud.String(c.copts.projectId)
+	req.ULBId = ucloud.String(ulbId)
+	req.VServerId = ucloud.String(vServerId)
+	req.SSLId = ucloud.String(sslId)
+
+	_, err := c.UnbindSSL(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// DoBindingSSL bind ssl
+func (c *Client) DoBindingSSL(sslId, ulbId, vServerId string) error {
 	req := c.NewBindSSLRequest()
+	req.ProjectId = ucloud.String(c.copts.projectId)
 
 	req.SSLId = ucloud.String(sslId)
 	req.ULBId = ucloud.String(ulbId)

@@ -38,4 +38,3 @@ func (a *AcmeConf) GetKeyAndFullChain() string {
 func (a *AcmeConf) GetSSLName() string {
 	return fmt.Sprintf("%s-acme-%s", time.Now().Format("2006-01-02-15-04"), a.Le_Domain)
 }
-
