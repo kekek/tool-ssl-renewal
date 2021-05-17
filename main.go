@@ -28,7 +28,9 @@ func main() {
 	}
 
 	if len(*vServerId) == 0 || len(*ulbId) == 0 {
-		log.Fatalf("ulb_id 或 v_server_id 不能为空")
+		log.Printf("ulb_id 或 v_server_id 不能为空\n")
+		flag.Usage()
+		os.Exit(0)
 	}
 
 	err := setting.CheckAndParseConf(*confPath)
