@@ -11,7 +11,7 @@ import (
 )
 
 var printVersion = flag.Bool("v", false, "show build version for the program")
-var confPath = flag.String("c", "ilaiyang.conf", "path to conf that create by acme.sh")
+var confPath = flag.String("c", "data/test.conf", "path to conf that create by acme.sh")
 
 
 
@@ -36,5 +36,15 @@ func main() {
 	log.Printf("配置文件解析完成  %#v", setting.Config)
 
 	log.Print("start create ucloud ssl conf")
+
+	sslConf, err := setting.Config.Convert2SSLConf()
+	if err != nil {
+		log.Fatalf("convert ssl conf failed : %v", err)
+	}
+
+	log.Printf("sslConf : %#v", sslConf)
+
+	log.Println(sslConf.Le_CertCreateTime.String())
+	log.Println(sslConf.Le_NextRenewTime.String())
 
 }
