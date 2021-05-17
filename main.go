@@ -12,6 +12,10 @@ import (
 	"wps.ktkt.com/monitor/tool-ssl-renewal/version"
 )
 
+//import (
+//	"github.com/spf13/cobra"
+//)
+
 var (
 	printVersion = flag.Bool("v", false, "show build version for the program")
 	confPath     = flag.String("c", "data/run.toml", "path to conf that create by acme.sh")
