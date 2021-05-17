@@ -1,62 +1,39 @@
 package setting
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
-	"strconv"
-	"time"
 
 	"github.com/burntsushi/toml"
+	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
+	"wps.ktkt.com/monitor/tool-ssl-renewal/pkg/util/path"
 )
 
-var Config *Conf
-
-type Conf struct {
-	Le_Domain            string `json:"Le_Domain"`
-	Le_CertCreateTime    string `json:"Le_CertCreateTime"`
-	Le_CertCreateTimeStr string `json:"Le_CertCreateTimeStr"`
-	Le_NextRenewTimeStr  string `json:"Le_NextRenewTimeStr"`
-	Le_NextRenewTime     string `json:"Le_NextRenewTime"`
-	Le_RealKeyPath       string `json:"Le_RealKeyPath"`
-	Le_RealFullChainPath string `json:"Le_RealFullChainPath"`
+type Config struct {
+	ProjectId        string          // 项目projectID
+	VServerId        string          // 绑定操作的v_server id值
+	UlbId            string          // 绑定操作的 ulb_id
+	SSLConfigPath    string          // acme 生成的域名配置路径
+	UCloudCredential auth.Credential // u_cloud 的安全验证配置
 }
 
-func (c *Conf) Convert2SSLConf() (*SSLConf, error) {
-	conf := &SSLConf{}
+var Conf *Config
 
-	certCreateTime, err := parseStrUnixToTime(c.Le_CertCreateTime)
-	if err != nil {
-		return conf, err
+func CheckAndParseConf(confPath string) error {
+	// parse config file
+	if !path.Exists(confPath) || !path.IsFile(confPath) {
+		return fmt.Errorf("conf file not exist : %s", confPath)
 	}
 
-	nextRenewTime, err := parseStrUnixToTime(c.Le_NextRenewTime)
+	err := ParseConf(confPath)
 	if err != nil {
-		return conf, err
+		log.Printf("ParseConf failed : %v \n", err)
+		return err
 	}
+	log.Printf("配置文件解析完成  %#v \n", Conf)
 
-	conf.Le_CertCreateTime = certCreateTime
-	conf.Le_NextRenewTime = nextRenewTime
-	conf.Le_CertCreateTimeStr = c.Le_CertCreateTimeStr
-	conf.Le_NextRenewTimeStr = c.Le_NextRenewTimeStr
-	conf.Le_Domain = c.Le_Domain
-
-	keyContent, _ := ioutil.ReadFile(c.Le_RealKeyPath)
-	fullContent, _ := ioutil.ReadFile(c.Le_RealFullChainPath)
-
-	conf.Le_RealFullChain = fullContent
-	conf.Le_RealKey = keyContent
-
-	return conf, nil
-}
-
-type SSLConf struct {
-	Le_Domain            string
-	Le_CertCreateTime    time.Time
-	Le_CertCreateTimeStr string
-	Le_NextRenewTimeStr  string
-	Le_NextRenewTime     time.Time
-	Le_RealKey           []byte
-	Le_RealFullChain     []byte
+	return nil
 }
 
 func ParseConf(confPath string) error {
@@ -66,22 +43,14 @@ func ParseConf(confPath string) error {
 		return err
 	}
 
-	Config = &Conf{}
+	Conf = &Config{}
 
-	err = toml.Unmarshal(data, Config)
+	err = toml.Unmarshal(data, Conf)
 	if err != nil {
 		log.Printf("parse config file fialed: %v", err)
 		return err
 	}
 
 	return nil
-}
 
-func parseStrUnixToTime(timestampStr string) (time.Time, error) {
-	timestampInt64, err := strconv.ParseInt(timestampStr, 10, 64)
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	return time.Unix(timestampInt64, 0), nil
 }
