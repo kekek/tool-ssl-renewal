@@ -12,8 +12,8 @@ import (
 
 type Config struct {
 	ProjectId        string          // 项目projectID
-	VServerId        string          // 绑定操作的v_server id值
-	UlbId            string          // 绑定操作的 ulb_id
+	//VServerId        string          // 绑定操作的v_server id值
+	//UlbId            string          // 绑定操作的 ulb_id
 	SSLConfigPath    string          // acme 生成的域名配置路径
 	UCloudCredential auth.Credential // u_cloud 的安全验证配置
 }

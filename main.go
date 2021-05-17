@@ -12,8 +12,12 @@ import (
 	"wps.ktkt.com/monitor/tool-ssl-renewal/version"
 )
 
-var printVersion = flag.Bool("v", false, "show build version for the program")
-var confPath = flag.String("c", "data/run.toml", "path to conf that create by acme.sh")
+var (
+	printVersion = flag.Bool("v", false, "show build version for the program")
+	confPath     = flag.String("c", "data/run.toml", "path to conf that create by acme.sh")
+	ulbId        = flag.String("ulb_id", "", "ucloud ulb id, must not empty")
+	vServerId    = flag.String("v_server_id", "", "ucloud vServer id, must not empty ")
+)
 
 func main() {
 	flag.Parse()
@@ -21,6 +25,10 @@ func main() {
 	if *printVersion {
 		version.PrintVersion()
 		os.Exit(0)
+	}
+
+	if len(*vServerId) == 0 || len(*ulbId) == 0 {
+		log.Fatalf("ulb_id 或 v_server_id 不能为空")
 	}
 
 	err := setting.CheckAndParseConf(*confPath)
@@ -57,7 +65,7 @@ func main() {
 		panic(err)
 	}
 	//sslId := "ssl-5jtnrhjy"
-	err = cli.SendBindingSSL(sslId, setting.Conf.UlbId, setting.Conf.VServerId)
+	err = cli.SendBindingSSL(sslId, *ulbId, *vServerId)
 	if err != nil {
 		log.Printf("SendBindingSSL ssl failed : %v", err)
 	}
