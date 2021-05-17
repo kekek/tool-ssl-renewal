@@ -21,4 +21,4 @@ _testmain.go
 _Store
 .DS_Store
 
-./bin
+bin/
