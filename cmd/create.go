@@ -1,8 +1,10 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
+	"fmt"
+	"os"
 
+	"github.com/spf13/cobra"
 	"wps.ktkt.com/monitor/tool-ssl-renewal/internal/handler/ucloud"
 )
 
@@ -11,7 +13,16 @@ var sslName string
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "create a ssl certificate to ULB",
-	RunE:  ucloud.CmdCreateHandler(sslName),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		sslId, err := ucloud.CmdCreateHandler(sslName)
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprint(os.Stdout, sslId)
+
+		return nil
+	},
 }
 
 func init() {
