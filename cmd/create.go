@@ -11,11 +11,11 @@ var sslName string
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "create a ssl certificate to ULB",
-	RunE: ucloud.CmdCreateHandler(sslName),
+	RunE:  ucloud.CmdCreateHandler(sslName),
 }
 
 func init() {
 	rootCmd.AddCommand(createCmd)
 
-	createCmd.PersistentFlags().StringVar(&sslName, "name", "", "name of the ssl certificate to create, if empty, it will be auto generated")
+	createCmd.Flags().StringVar(&sslName, "name", "", "name of the ssl certificate to create, if empty, it will be auto generated")
 }

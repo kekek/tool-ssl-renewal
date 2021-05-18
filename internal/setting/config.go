@@ -11,7 +11,7 @@ import (
 )
 
 type Config struct {
-	ProjectId        string          // 项目projectID
+	ProjectId string // 项目projectID
 	//VServerId        string          // 绑定操作的v_server id值
 	//UlbId            string          // 绑定操作的 ulb_id
 	SSLConfigPath    string          // acme 生成的域名配置路径
