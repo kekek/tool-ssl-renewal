@@ -15,11 +15,11 @@ sslId="ssl-vuvbzhwn"
 echo $sslId
 
 echo "www 绑定新的证书"
-echo "${toolPath}  binding -c ${configFilePath} -l ${sslId} -b \"ulb-cqmpcf25\" -s \"vserver-1qgzajvb\""
+echo "${toolPath}  binding -c ${configFilePath} -s ${sslId} -u \"ulb-cqmpcf25\" -v \"vserver-1qgzajvb\""
 #${toolPath}  binding -c ${configFilePath} -l ${sslId} -b "ulb-cqmpcf25" -s "vserver-1qgzajvb"
 
 echo "comet 绑定新证书"
-echo "${toolPath}  binding -c ${configFilePath} -l ${sslId} -b \"ulb-cwwmvypr\" -s \"vserver-2mrxtihd\""
+echo "${toolPath}  binding -c ${configFilePath} -s ${sslId} -u \"ulb-cwwmvypr\" -v \"vserver-2mrxtihd\""
 #${toolPath}  binding -c ${configFilePath} -l ${sslId} -b "ulb-cwwmvypr" -s "vserver-2mrxtihd"
 
 echo "$0 job done"
