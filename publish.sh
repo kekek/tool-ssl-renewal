@@ -2,6 +2,9 @@
 
 echo ">> build linux && scp to server"
 
+workhost="106.75.72.70"
+workdir="/root/.acme.sh/self-hook/"
+
 export GOOS="linux"
 ./build.sh
 
@@ -9,8 +12,12 @@ moduleName=$(go list -m)
 
 program=$(basename ${moduleName})
 
-scp bin/${program} root@106.75.72.70:/root/.acme.sh/self-hook/
+suffix="$(go env GOOS)-$(go env GOARCH)"
+
+target="${program}-${suffix}"
+
+scp bin/${program} root@${workhost}:"${workdir}${target}"
 
 echo ">> publish on server:"
-
-echo "cd /root/.acme.sh/self-hook && mv ${program}  tool-update-ssl-ucloud"
+#
+echo "cd ${workdir} && mv ${target}  $program"

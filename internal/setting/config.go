@@ -31,7 +31,6 @@ func CheckAndParseConf(confPath string) error {
 		log.Printf("ParseConf failed : %v \n", err)
 		return err
 	}
-	log.Printf("配置文件解析完成  %#v \n", Conf)
 
 	return nil
 }
@@ -39,7 +38,6 @@ func CheckAndParseConf(confPath string) error {
 func ParseConf(confPath string) error {
 	data, err := ioutil.ReadFile(confPath)
 	if err != nil {
-		log.Printf("read conf file fialed : %v", err)
 		return err
 	}
 
@@ -47,7 +45,6 @@ func ParseConf(confPath string) error {
 
 	err = toml.Unmarshal(data, Conf)
 	if err != nil {
-		log.Printf("parse config file fialed: %v", err)
 		return err
 	}
 
