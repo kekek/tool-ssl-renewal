@@ -20,8 +20,6 @@ Usage of ./tool-ssl-renewal:
 
 ## 配置文件
 ```bash
-VServerId = "vserver id"
-UlbId = "ulb id"
 ProjectId = "porject id"
 
 SSLConfigPath = "acme 生成相关域名的路径"
