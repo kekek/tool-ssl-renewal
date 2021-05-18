@@ -41,3 +41,11 @@ let's encrypt 获取证书后， 会自动更新，自动更新
 acme.sh --deploy -d ilaiyang.com.cn --renew-hook "path/to/tool-ssl-renewal -c path/to/conf.toml"
 
 ```
+
+
+## v2
+
+每次更新只需创建一次ssl证书，更新多个 ulb,vserver，使用 github.com/spf13/cobra 对生成ssl证书和绑定命令分开执行
+
+- 生成命令返回 新创建的sslID值
+- 绑定命令， 接收新的sslID， v-server-ID， ulb-ID， 创建新的绑定
