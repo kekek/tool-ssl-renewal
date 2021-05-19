@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"wps.ktkt.com/monitor/tool-ssl-renewal/internal/setting"
+	"wps.ktkt.com/monitor/tool-ssl-renewal/version"
 
 	"github.com/spf13/viper"
 )
@@ -51,6 +52,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.tool-test.yaml)")
 	rootCmd.MarkPersistentFlagRequired("config")
 
+	rootCmd.Version = "\n" + version.BuildInfo.TplVersion()
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

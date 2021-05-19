@@ -4,6 +4,7 @@ package version
 
 import (
 	"fmt"
+	"strings"
 )
 
 var (
@@ -31,16 +32,22 @@ type PkgVersion struct {
 	BuildPackageModule string
 }
 
-func (r PkgVersion) String() string {
+func (r PkgVersion) LogVersion() string {
 	return r.BuildDateTime + "-" + r.BuildGitCommit
 }
 
 func (m PkgVersion) PrintVersion() {
-	fmt.Printf("%15s: %s \n", "BuildTime", BuildDateTime)
-	fmt.Printf("%15s: %s \n", "BuildGitBranch", BuildGitBranch)
-	fmt.Printf("%15s: %s \n", "BuildGitCommit", BuildGitCommit)
-	fmt.Printf("%15s: %s \n", "BuildPkgModule", BuildPackageModule)
+	fmt.Printf("%s", m.TplVersion())
 	fmt.Println()
+}
+
+func (m PkgVersion) TplVersion() string {
+	str := strings.Builder{}
+	str.WriteString(fmt.Sprintf("%15s: %s \n", "BuildTime", BuildDateTime))
+	str.WriteString(fmt.Sprintf("%15s: %s \n", "BuildGitBranch", BuildGitBranch))
+	str.WriteString(fmt.Sprintf("%15s: %s \n", "BuildGitCommit", BuildGitCommit))
+	str.WriteString(fmt.Sprintf("%15s: %s \n", "BuildPkgModule", BuildPackageModule))
+	return str.String()
 }
 
 func PrintVersion() {
